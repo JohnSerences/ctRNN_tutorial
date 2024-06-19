@@ -1,3 +1,6 @@
+### Tutorial for basic continuous time recurrent neural network using pytorch. Train models to perform simple tasks that are commonly used in neuroscience experiments
+
+
 ### Recommended setup from command line (tested on Mac running Sonoma 14.5 and Python 3.9.6)
 #### if you already have a full python install from Anaconda, then you can probably stay in your (base) env and may just have to install `torch` (see below)
 
