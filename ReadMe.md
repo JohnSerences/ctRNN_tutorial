@@ -1,7 +1,7 @@
 ### Recommended setup from command line (tested on Mac running Sonoma 14.5 and Python 3.9.6)
 #### if you already have a full python install from Anaconda, then you can probably stay in your (base) env and may just have to install `torch` (see below)
 
-Open a terminal (command window). If you are in the `(base)` env from conda, deactivate e.g.:
+But if you want to use a new environment, then open a terminal (command window). If you are in the `(base)` env from conda, deactivate e.g.:
 
 `conda deactivate`
 
