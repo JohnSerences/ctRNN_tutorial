@@ -6,7 +6,7 @@
 
 But if you want to use a new environment, then open a terminal (command window). If you are in the `(base)` env from conda, deactivate e.g.:
 
-`conda deactivate`
+`conda deactivate` 
 
 Install virtualenv
 
