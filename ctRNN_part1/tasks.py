@@ -1,10 +1,14 @@
-# Name: John Serences
-# Date: June 8 2024
-# Email: jserences@ucsd.edu
-# Description: Class to define tasks for training/evaluting continuous time RNN
-# go/no-go, delayed match to sample, and mante tasks adapted from Kim,Li,Sejnowski 2019 PNAS 
-# should be easy to make your own following the same general format
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Sun Jun 8 09:20:16 2024
 
+@author: john serences (jserences@ucsd.edu)
+
+Class to define tasks for training/evaluting continuous time RNN
+go/no-go, delayed match to sample, and mante tasks adapted from Kim,Li,Sejnowski 2019 PNAS 
+should be easy to make your own following the same general format
+"""
 
 #---------------------------------------------------------------
 # imports
