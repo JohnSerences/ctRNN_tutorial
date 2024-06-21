@@ -60,6 +60,7 @@ class HLayer(torch.nn.Module):
     # follow Dale's principle or not...
     #--------------------------------
     def define_cell_type(self):
+
         """
         Randomly assign units as exc or inh based on desired
             proportion of inhibitory cells
@@ -104,6 +105,7 @@ class HLayer(torch.nn.Module):
     # apply Dale's principle if desired
     #--------------------------------
     def init_W_hid(self):
+
         '''
         Generate a connectivity weight matrix for the hidden layer W_hid
         using either a gaussian or gamma distribution.
@@ -188,16 +190,18 @@ class HLayer(torch.nn.Module):
             w = torch.matmul(torch.relu(self.weight), self.mask)
         
         else:
-            
+            # leave weight unchanged
             w = self.weight
 
         # compute output for each trial in the current batch
-        batch_size = r_t.shape[0]
-        out = torch.zeros((batch_size, r_t.shape[1]))
+        out = torch.matmul(r_t,w.T)
         
-        # loop over trials in batch
-        for b in range(batch_size):
-            out[b,:] = torch.matmul(r_t[b,:], w.T) + self.bias
+        # batch_size = r_t.shape[0]
+        # out = torch.zeros((batch_size, r_t.shape[1]))
+        
+        # # loop over trials in batch
+        # for b in range(batch_size):
+        #     out[b,:] = torch.matmul(r_t[b,:], w.T) + self.bias
 
         # return...
         return out

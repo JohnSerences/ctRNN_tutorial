@@ -18,15 +18,21 @@ from h_layer import *
 #--------------------------------
 class RLayer(torch.nn.Module):
 
+    
+    #----------------------------
+    # set up the instance...
+    #----------------------------
     def __init__(self, rnn_settings):
         '''
         Initialize the params for the network
             INPUT
                 rnn_settings: dict with network parameters
         '''
-        # init...
+        #----------------------------
+        # init
+        #----------------------------
         super().__init__()
-
+        
         #----------------------------
         # get input params for network
         #----------------------------
@@ -37,7 +43,7 @@ class RLayer(torch.nn.Module):
         self.tau = rnn_settings.get('tau',20)                      # decay
         self.alpha = self.dt/self.tau                              # determines the influence of prior activation on current activation
         
-        act_func = rnn_settings.get('act_func','relu')             # activation function relating v_t to fr_r
+        act_func = rnn_settings.get('act_func','relu')             # activation function relating x_t to r
         if act_func == 'relu':
             self.act_func = torch.relu
         elif act_func == 'sigmoid':
@@ -46,8 +52,8 @@ class RLayer(torch.nn.Module):
             raise ValueError(f'{act_func} is not a currently supported activation function')
 
         # pre and post activation function noise...
-        self.preact_n = rnn_settings.get('preact_n', 0)            # noise before passing v_t to activation function
-        self.postact_n = rnn_settings.get('postact_n', 0)          # noise after passing v_t to the activation function
+        self.preact_n = rnn_settings.get('preact_n', 0)            # noise before passing x_t to activation function
+        self.postact_n = rnn_settings.get('postact_n', 0)          # noise after passing x_t to the activation function
 
         #----------------------------
         # determine if weight/bias params are 
@@ -87,8 +93,8 @@ class RLayer(torch.nn.Module):
         # Then assign weights/requires_grad flag (trainable)
         # to input weights/bias
         #----------------------------
-        self.inp_layer.weight = torch.nn.Parameter(self.W_in,requires_grad = self.W_in_trainable)
-        self.inp_layer.bias = torch.nn.Parameter(self.bias_in,requires_grad = self.bias_in_trainable)
+        self.inp_layer.weight = torch.nn.Parameter(self.W_in,requires_grad=self.W_in_trainable)
+        self.inp_layer.bias = torch.nn.Parameter(self.bias_in,requires_grad=self.bias_in_trainable)
         
     #--------------------------------
     # define the operations for each recurrent 
@@ -124,7 +130,7 @@ class RLayer(torch.nn.Module):
     
         # additive noise applied before passing through activation function
         if self.preact_n > 0:
-            preact_n = torch.randn((u_t.size(0), self.h_size), device=u_t.device) * self.preact_n
+            preact_n = torch.randn((u_t.size(0), self.h_size)) * self.preact_n
             x_t1 = x_t1 + self.alpha * preact_n
     
         # apply activation function to get firing rate at next time step
@@ -132,7 +138,7 @@ class RLayer(torch.nn.Module):
     
         # additive noise applied after passing through activation function
         if self.postact_n > 0:
-            postact_n = torch.randn((u_t.size(0), self.h_size), device=u_t.device) * self.postact_n
+            postact_n = torch.randn((u_t.size(0), self.h_size)) * self.postact_n
             r_t1 = r_t1 + postact_n
 
         # return new states, which will form the basis
@@ -141,7 +147,7 @@ class RLayer(torch.nn.Module):
 
     #--------------------------------
     # define how stimulus inputs proogate through
-    # the network...builds a stack of the network computations
+    # the network...builds a stack of the network states
     #--------------------------------    
     
     def forward(self, inp):
@@ -195,8 +201,13 @@ class ctRNN(torch.nn.Module):
     # Instantiate the forward model    
     #--------------------------------
     def forward(self, inputs):
+        
+        # get the state of the hidden layer units
         hidden_states = self.recurrent_layer(inputs)
+        
+        # run it through the output layer
         output = self.output_layer(hidden_states.float())
+        
         return output, hidden_states
     
     #--------------------------------
